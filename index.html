@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>فاکتور فروش - تبریز الکتریک</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap');
+
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    background: #eef1f4;
+    margin: 0;
+    padding: 20px;
+    color: #1e2430;
+  }
+  .toolbar {
+    max-width: 950px;
+    margin: 0 auto 14px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .toolbar button {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  #addRowBtn { background: #2563eb; color: #fff; }
+  #printBtn { background: #16a34a; color: #fff; }
+  #resetBtn { background: #dc2626; color: #fff; }
+
+  .sheet {
+    max-width: 950px;
+    margin: 0 auto;
+    background: #fff;
+    border: 2px solid #1e2430;
+    border-radius: 10px;
+    padding: 24px 28px;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #1e2430;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    gap: 10px;
+  }
+  .header-side { flex: 0 0 auto; }
+  .header-side .field-row input {
+    max-width: 100px;
+    min-width: 0;
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  .header-side .field-row label {
+    font-size: 12px;
+  }
+  .title-block { text-align: center; flex: 1; }
+  .header h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .header h2 {
+    margin: 4px 0 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: #444;
+  }
+
+  .top-info {
+    margin-bottom: 16px;
+  }
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .field-row label {
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .field-row input {
+    flex: 1;
+    min-width: 0;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 6px 8px;
+    border: 1px solid #b8c0cc;
+    border-radius: 6px;
+  }
+
+  .buyer-box h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    font-weight: 700;
+    border-bottom: 1px solid #d5dae1;
+    padding-bottom: 6px;
+  }
+  .buyer-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .buyer-row .field-row { flex: 1 1 180px; min-width: 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+  }
+  th, td {
+    border: 1px solid #b8c0cc;
+    padding: 6px 4px;
+    text-align: center;
+    font-size: 13px;
+  }
+  th {
+    background: #1e2430;
+    color: #fff;
+    font-weight: 700;
+  }
+  td input {
+    width: 100%;
+    border: none;
+    text-align: center;
+    font-family: inherit;
+    font-size: 13px;
+    background: transparent;
+  }
+  td input:focus { background: #eef4ff; outline: none; }
+  td.readonly { background: #f2f4f7; font-weight: 600; }
+  .col-desc { width: 24%; }
+  .col-row { width: 6%; }
+  .col-qty, .col-discount { width: 9%; }
+  .col-price, .col-price-disc, .col-total { width: 16%; }
+  .del-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 3px 6px;
+  }
+
+  .grand-total {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  .grand-total-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1e2430;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .declaration {
+    margin-top: 24px;
+    font-size: 14px;
+    line-height: 2;
+    border-top: 1px solid #d5dae1;
+    padding-top: 14px;
+  }
+  .declaration input {
+    font-family: inherit;
+    font-size: 14px;
+    border: none;
+    border-bottom: 1px dashed #666;
+    text-align: center;
+    padding: 0 4px;
+    min-width: 140px;
+    background: transparent;
+  }
+
+  .signatures {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 46px;
+  }
+  .sign-box { text-align: center; font-weight: 700; font-size: 14px; }
+  .sign-line {
+    margin-top: 40px;
+    border-top: 1px solid #333;
+    width: 180px;
+  }
+
+  .footer-phone {
+    text-align: center;
+    margin-top: 30px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none; }
+    .sheet { border: none; box-shadow: none; }
+    td.readonly { background: #fff !important; }
+    .del-btn, .col-del { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button id="addRowBtn">+ افزودن ردیف</button>
+  <button id="printBtn">چاپ / خروجی PDF</button>
+  <button id="resetBtn">پاک کردن فرم</button>
+</div>
+
+<div class="sheet">
+  <div class="header">
+    <div class="header-side">
+      <div class="field-row">
+        <label>شماره فاکتور:</label>
+        <input type="text" id="invoiceNumber">
+      </div>
+    </div>
+    <div class="title-block">
+      <h1>تبریز الکتریک</h1>
+      <h2>فاکتور فروش</h2>
+    </div>
+    <div class="header-side">
+      <div class="field-row">
+        <label>تاریخ:</label>
+        <input type="text" id="invoiceDate" placeholder="مثلاً 1404/06/21">
+      </div>
+    </div>
+  </div>
+
+  <div class="top-info">
+    <div class="buyer-box">
+      <h3>اطلاعات خریدار</h3>
+      <div class="buyer-row">
+        <div class="field-row">
+          <label>نام خریدار:</label>
+          <input type="text" id="buyerName">
+        </div>
+        <div class="field-row">
+          <label>تلفن خریدار:</label>
+          <input type="text" id="buyerPhone">
+        </div>
+        <div class="field-row">
+          <label>آدرس:</label>
+          <input type="text" id="buyerAddress">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="col-row">ردیف</th>
+        <th class="col-desc">شرح کالا</th>
+        <th class="col-qty">مقدار</th>
+        <th class="col-price">فی (ریال)</th>
+        <th class="col-discount">تخفیف (%)</th>
+        <th class="col-price-disc">فی با تخفیف</th>
+        <th class="col-total">جمع (ریال)</th>
+        <th class="col-del" style="width:4%;"></th>
+      </tr>
+    </thead>
+    <tbody id="itemsBody">
+    </tbody>
+  </table>
+
+  <div class="grand-total">
+    <div class="grand-total-box">
+      <span>جمع کل:</span>
+      <span id="grandTotal">0</span>
+      <span>ریال</span>
+    </div>
+  </div>
+
+  <div class="declaration">
+    اجناس فاکتور صحیح و سالم به اینجانب آقا/خانم
+    <input type="text" id="deliveredTo" placeholder="نام">
+    تحویل داده شد. و تا تسویه حساب نهایی و وصول چک‌ها به‌صورت امانی بوده و عندالمطالبه می‌باشد.
+  </div>
+
+  <div class="signatures">
+    <div class="sign-box">
+      امضا خریدار
+      <div class="sign-line"></div>
+    </div>
+    <div class="sign-box">
+      امضا فروشنده
+      <div class="sign-line"></div>
+    </div>
+  </div>
+
+  <div class="footer-phone">شماره تماس: 09367535766</div>
+</div>
+
+<script>
+let rowCount = 0;
+
+function numberWithCommas(x) {
+  if (isNaN(x)) return "0";
+  return Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function addRow(prefill) {
+  rowCount++;
+  const tbody = document.getElementById('itemsBody');
+  const tr = document.createElement('tr');
+  tr.dataset.id = rowCount;
+  tr.innerHTML = `
+    <td class="rowNum readonly">${tbody.children.length + 1}</td>
+    <td><input type="text" class="desc"></td>
+    <td><input type="number" class="qty" min="0" step="any" value="0"></td>
+    <td><input type="number" class="price" min="0" step="any" value="0"></td>
+    <td><input type="number" class="discount" min="0" max="100" step="any" value="0"></td>
+    <td class="priceDisc readonly">0</td>
+    <td class="total readonly">0</td>
+    <td class="col-del"><button class="del-btn" onclick="deleteRow(this)">حذف</button></td>
+  `;
+  tbody.appendChild(tr);
+
+  tr.querySelectorAll('.qty, .price, .discount').forEach(inp => {
+    inp.addEventListener('input', () => calcRow(tr));
+  });
+  calcRow(tr);
+}
+
+function calcRow(tr) {
+  const qty = parseFloat(tr.querySelector('.qty').value) || 0;
+  const price = parseFloat(tr.querySelector('.price').value) || 0;
+  const discount = parseFloat(tr.querySelector('.discount').value) || 0;
+
+  const priceDisc = price - (price * discount / 100);
+  const total = priceDisc * qty;
+
+  tr.querySelector('.priceDisc').textContent = numberWithCommas(priceDisc);
+  tr.querySelector('.total').textContent = numberWithCommas(total);
+  tr.querySelector('.total').dataset.raw = total;
+
+  updateGrandTotal();
+}
+
+function deleteRow(btn) {
+  const tr = btn.closest('tr');
+  tr.remove();
+  renumberRows();
+  updateGrandTotal();
+}
+
+function renumberRows() {
+  const rows = document.querySelectorAll('#itemsBody tr');
+  rows.forEach((tr, i) => {
+    tr.querySelector('.rowNum').textContent = i + 1;
+  });
+}
+
+function updateGrandTotal() {
+  let sum = 0;
+  document.querySelectorAll('#itemsBody tr').forEach(tr => {
+    sum += parseFloat(tr.querySelector('.total').dataset.raw || 0);
+  });
+  document.getElementById('grandTotal').textContent = numberWithCommas(sum);
+}
+
+document.getElementById('addRowBtn').addEventListener('click', () => addRow());
+document.getElementById('printBtn').addEventListener('click', () => window.print());
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (confirm('همه اطلاعات فرم پاک شود؟')) {
+    document.getElementById('itemsBody').innerHTML = '';
+    document.getElementById('buyerName').value = '';
+    document.getElementById('buyerPhone').value = '';
+    document.getElementById('buyerAddress').value = '';
+    document.getElementById('invoiceNumber').value = '';
+    document.getElementById('invoiceDate').value = '';
+    document.getElementById('deliveredTo').value = '';
+    rowCount = 0;
+    for (let i = 0; i < 7; i++) addRow();
+  }
+});
+
+// buyer name auto-fill into declaration text
+document.getElementById('buyerName').addEventListener('input', function() {
+  document.getElementById('deliveredTo').value = this.value;
+});
+
+for (let i = 0; i < 7; i++) addRow();
+</script>
+
+</body>
+</html>
